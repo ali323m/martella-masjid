@@ -778,8 +778,65 @@
     <p class="footer-text" style="margin-top:0.3rem;">1915 Martin Grove Road</p>
   </footer>
 
+  <!-- ── ADMIN PANEL ── -->
+  <div id="adminPanel" style="display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); overflow-y:auto;">
+    <div style="max-width:520px; margin:3rem auto; background:#faf7f2; padding:2.5rem; position:relative; border-top:4px solid #b8903a;">
+      <button onclick="closeAdmin()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#7a7a7a;">✕</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:#1a2e1f;margin-bottom:0.3rem;">Admin Panel</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:#7a7a7a;margin-bottom:1.8rem;font-style:italic;">Override prayer times — leave blank to use auto-calculated times</div>
+
+      <div id="adminPrayerFields"></div>
+
+      <div style="margin-top:1rem;padding:1rem;background:#f5f0e8;border-left:3px solid #b8903a;">
+        <div style="font-family:'Cinzel',serif;font-size:0.8rem;color:#1a2e1f;margin-bottom:0.5rem;">EXPIRY</div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+          <label style="font-size:0.9rem;color:#4a4a4a;font-family:'Cormorant Garamond',serif;">Overrides expire after:</label>
+          <select id="expiryDays" style="padding:0.4rem 0.7rem;border:1px solid #d4a853;background:#faf7f2;font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:#1c1c1c;">
+            <option value="1">1 day</option>
+            <option value="3">3 days</option>
+            <option value="7" selected>7 days</option>
+            <option value="14">2 weeks</option>
+            <option value="30">1 month</option>
+            <option value="0">Never</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.8rem;margin-top:1.5rem;flex-wrap:wrap;">
+        <button onclick="saveOverrides()" style="flex:1;padding:0.85rem;background:#1a2e1f;color:#f5f0e8;border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;text-transform:uppercase;">Save Changes</button>
+        <button onclick="clearOverrides()" style="flex:1;padding:0.85rem;background:transparent;color:#b8903a;border:1px solid #b8903a;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;text-transform:uppercase;">Clear All Overrides</button>
+      </div>
+      <div id="adminMsg" style="margin-top:1rem;font-size:0.9rem;font-style:italic;font-family:'Cormorant Garamond',serif;color:#3d6147;text-align:center;"></div>
+
+      <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(184,144,58,0.2);">
+        <div style="font-family:'Cinzel',serif;font-size:0.8rem;color:#7a7a7a;margin-bottom:0.5rem;">CHANGE PASSWORD</div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <input id="newPassInput" type="password" placeholder="New password" style="flex:1;padding:0.5rem 0.8rem;border:1px solid #d4a853;background:#faf7f2;font-family:'Cormorant Garamond',serif;font-size:0.95rem;min-width:140px;">
+          <button onclick="changePassword()" style="padding:0.5rem 1.2rem;background:#2d4a35;color:#f5f0e8;border:none;font-family:'Cormorant Garamond',serif;font-size:0.9rem;cursor:pointer;">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOGIN MODAL ── -->
+  <div id="loginModal" style="display:none; position:fixed; inset:0; z-index:998; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); justify-content:center; align-items:center;">
+    <div style="background:#faf7f2; padding:2.5rem; max-width:360px; width:90%; border-top:4px solid #b8903a; position:relative;">
+      <button onclick="closeLogin()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#7a7a7a;">✕</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:#1a2e1f;margin-bottom:0.3rem;">Admin Login</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:#7a7a7a;font-style:italic;margin-bottom:1.5rem;">Martella Masjid Management</div>
+      <input id="adminPassInput" type="password" placeholder="Enter password" style="width:100%;padding:0.7rem 1rem;border:1px solid #d4a853;background:#f5f0e8;font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:1rem;outline:none;">
+      <button onclick="attemptLogin()" style="width:100%;padding:0.85rem;background:#1a2e1f;color:#f5f0e8;border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;text-transform:uppercase;">Login</button>
+      <div id="loginErr" style="margin-top:0.8rem;font-size:0.9rem;color:#c0392b;font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- Hidden admin trigger: triple-click the footer name -->
   <script>
-    // ── PRAYER TIMES via Aladhan API ──
+    // ── CONFIG ──
+    const ADMIN_PASS_KEY = 'mm_admin_pass';
+    const OVERRIDES_KEY  = 'mm_prayer_overrides';
+    const DEFAULT_PASS   = 'masjid2024'; // Change this after first login!
+
     const PRAYERS = [
       { key: 'Fajr',    arabic: 'الفجر',   en: 'Fajr'    },
       { key: 'Dhuhr',   arabic: 'الظهر',   en: 'Dhuhr'   },
@@ -788,18 +845,51 @@
       { key: 'Isha',    arabic: 'العشاء',  en: 'Isha'    },
     ];
 
+    // ── HELPERS ──
     function to12h(time24) {
+      if (!time24 || !time24.includes(':')) return time24;
       const [h, m] = time24.split(':').map(Number);
       const ampm = h >= 12 ? 'PM' : 'AM';
       const h12 = h % 12 || 12;
       return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
     }
 
+    function to24h(time12) {
+      // accepts "5:00 PM" or "17:00"
+      if (!time12) return '';
+      if (!time12.includes(' ')) return time12;
+      const [timePart, ampm] = time12.trim().split(' ');
+      let [h, m] = timePart.split(':').map(Number);
+      if (ampm === 'PM' && h !== 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    }
+
+    function getStoredPass() {
+      return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS;
+    }
+
+    function getOverrides() {
+      try {
+        const raw = localStorage.getItem(OVERRIDES_KEY);
+        if (!raw) return {};
+        const data = JSON.parse(raw);
+        // Check expiry
+        if (data.expiry && data.expiry !== 0 && Date.now() > data.expiry) {
+          localStorage.removeItem(OVERRIDES_KEY);
+          return {};
+        }
+        return data.times || {};
+      } catch { return {}; }
+    }
+
     function getCurrentPrayer(timings) {
       const now = new Date();
       const nowMins = now.getHours() * 60 + now.getMinutes();
       const times = PRAYERS.map(p => {
-        const [h, m] = timings[p.key].split(':').map(Number);
+        const t = timings[p.key];
+        if (!t || !t.includes(':')) return 0;
+        const [h, m] = t.split(':').map(Number);
         return h * 60 + m;
       });
       let current = 4;
@@ -809,6 +899,7 @@
       return current;
     }
 
+    // ── PRAYER TIMES ──
     async function loadPrayerTimes() {
       const grid = document.getElementById('prayersGrid');
       const dateEl = document.getElementById('prayersDate');
@@ -821,22 +912,37 @@
           `https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?city=Etobicoke&country=Canada&method=2`
         );
         const data = await res.json();
-        const timings = data.data.timings;
+        const apiTimings = data.data.timings;
         const hijri = data.data.date.hijri;
         const gregorian = data.data.date.gregorian;
 
         dateEl.textContent = `${gregorian.weekday.en}, ${gregorian.date} · ${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
 
-        const activePrayer = getCurrentPrayer(timings);
-        grid.innerHTML = PRAYERS.map((p, i) => `
-          <div class="prayer-card ${i === activePrayer ? 'active' : ''}">
-            <div class="prayer-name">${p.arabic}</div>
-            <div class="prayer-name-en">${p.en}</div>
-            <div class="prayer-time">${to12h(timings[p.key])}</div>
-          </div>
-        `).join('');
+        // Merge with overrides
+        const overrides = getOverrides();
+        const finalTimings = {};
+        PRAYERS.forEach(p => {
+          finalTimings[p.key] = overrides[p.key] ? overrides[p.key] : apiTimings[p.key];
+        });
 
-        // Check Ramadan
+        const activePrayer = getCurrentPrayer(finalTimings);
+        const hasOverrides = Object.keys(overrides).length > 0;
+
+        grid.innerHTML = PRAYERS.map((p, i) => {
+          const isOverridden = !!overrides[p.key];
+          return `
+            <div class="prayer-card ${i === activePrayer ? 'active' : ''}">
+              <div class="prayer-name">${p.arabic}</div>
+              <div class="prayer-name-en">${p.en}</div>
+              <div class="prayer-time">${to12h(finalTimings[p.key])}</div>
+              ${isOverridden ? `<div style="font-size:0.7rem;color:#d4a853;font-style:italic;margin-top:0.3rem;font-family:'Cormorant Garamond',serif;">adjusted</div>` : ''}
+            </div>`;
+        }).join('');
+
+        if (hasOverrides) {
+          document.getElementById('overrideBadge').style.display = 'block';
+        }
+
         if (hijri.month.number === 9) {
           document.getElementById('ramadanBanner').classList.add('visible');
         }
@@ -847,7 +953,150 @@
       }
     }
 
+    // ── ADMIN PANEL ──
+    function openLogin() {
+      document.getElementById('loginModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+    }
+
+    function closeLogin() {
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('loginErr').textContent = '';
+      document.getElementById('adminPassInput').value = '';
+    }
+
+    function attemptLogin() {
+      const val = document.getElementById('adminPassInput').value;
+      if (val === getStoredPass()) {
+        closeLogin();
+        openAdmin();
+      } else {
+        document.getElementById('loginErr').textContent = 'Incorrect password. Please try again.';
+      }
+    }
+
+    document.getElementById('adminPassInput') && document.getElementById('adminPassInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') attemptLogin();
+    });
+
+    function openAdmin() {
+      const overrides = getOverrides();
+      const fields = document.getElementById('adminPrayerFields');
+      fields.innerHTML = PRAYERS.map(p => `
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
+          <div style="width:90px;">
+            <div style="font-family:'Noto Naskh Arabic',serif;font-size:1rem;color:#b8903a;direction:rtl;">${p.arabic}</div>
+            <div style="font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.1em;color:#1a2e1f;">${p.en}</div>
+          </div>
+          <input type="time" id="override_${p.key}"
+            value="${overrides[p.key] || ''}"
+            style="flex:1;padding:0.5rem 0.8rem;border:1px solid #d4a853;background:#f5f0e8;font-family:'Cormorant Garamond',serif;font-size:1rem;min-width:120px;color:#1c1c1c;">
+          <button onclick="clearSingle('${p.key}')" style="padding:0.4rem 0.8rem;background:transparent;border:1px solid #d4a853;color:#b8903a;font-family:'Cormorant Garamond',serif;font-size:0.85rem;cursor:pointer;">Reset</button>
+        </div>
+      `).join('');
+
+      // Set expiry selector
+      try {
+        const raw = localStorage.getItem(OVERRIDES_KEY);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (data.expiryDays !== undefined) {
+            document.getElementById('expiryDays').value = data.expiryDays;
+          }
+        }
+      } catch {}
+
+      document.getElementById('adminPanel').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAdmin() {
+      document.getElementById('adminPanel').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function saveOverrides() {
+      const times = {};
+      PRAYERS.forEach(p => {
+        const val = document.getElementById(`override_${p.key}`).value;
+        if (val) times[p.key] = val;
+      });
+
+      const expiryDays = parseInt(document.getElementById('expiryDays').value);
+      const expiry = expiryDays === 0 ? 0 : Date.now() + expiryDays * 86400000;
+
+      localStorage.setItem(OVERRIDES_KEY, JSON.stringify({ times, expiry, expiryDays }));
+
+      const msg = document.getElementById('adminMsg');
+      msg.style.color = '#3d6147';
+      msg.textContent = '✓ Changes saved! The website will now show your updated times.';
+      setTimeout(() => {
+        closeAdmin();
+        loadPrayerTimes();
+      }, 1500);
+    }
+
+    function clearSingle(key) {
+      document.getElementById(`override_${key}`).value = '';
+    }
+
+    function clearOverrides() {
+      localStorage.removeItem(OVERRIDES_KEY);
+      const msg = document.getElementById('adminMsg');
+      msg.style.color = '#c0392b';
+      msg.textContent = '✓ All overrides cleared. Auto-calculated times restored.';
+      setTimeout(() => {
+        closeAdmin();
+        loadPrayerTimes();
+      }, 1500);
+    }
+
+    function changePassword() {
+      const val = document.getElementById('newPassInput').value.trim();
+      if (val.length < 6) {
+        document.getElementById('adminMsg').style.color = '#c0392b';
+        document.getElementById('adminMsg').textContent = 'Password must be at least 6 characters.';
+        return;
+      }
+      localStorage.setItem(ADMIN_PASS_KEY, val);
+      document.getElementById('adminMsg').style.color = '#3d6147';
+      document.getElementById('adminMsg').textContent = '✓ Password updated successfully.';
+      document.getElementById('newPassInput').value = '';
+    }
+
+    // Triple-click footer name to open admin
+    let clickCount = 0, clickTimer;
+    document.querySelector('.footer-name').style.cursor = 'default';
+    document.querySelector('.footer-name').addEventListener('click', () => {
+      clickCount++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+      if (clickCount >= 3) { clickCount = 0; openLogin(); }
+    });
+
     loadPrayerTimes();
+  </script>
+
+  <!-- Override badge in prayer section -->
+  <style>
+    #overrideBadge {
+      display: none;
+      margin: 0.5rem auto 0;
+      font-size: 0.8rem;
+      color: var(--gold-pale);
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+    }
+  </style>
+  <script>
+    // Inject override badge after prayers grid
+    document.addEventListener('DOMContentLoaded', () => {
+      const note = document.querySelector('.prayers-note');
+      const badge = document.createElement('p');
+      badge.id = 'overrideBadge';
+      badge.textContent = '⚙ Some times have been adjusted by mosque management';
+      note.parentNode.insertBefore(badge, note);
+    });
   </script>
 </body>
 </html>
