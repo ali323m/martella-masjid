@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Martella Masjid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf7f2;
+      --gold: #b8903a;
+      --gold-light: #d4a853;
+      --gold-pale: #e8d5a3;
+      --deep-green: #1a2e1f;
+      --mid-green: #2d4a35;
+      --soft-green: #3d6147;
+      --text-dark: #1c1c1c;
+      --text-mid: #4a4a4a;
+      --text-light: #7a7a7a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,144,58,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--deep-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--text-mid);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.25s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* PAGE HEADER */
+    .page-header {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+    }
+    .section-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .page-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+    .page-header .arabic {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      direction: rtl;
+      margin-top: 0.5rem;
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+      width: 100%;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .contact-card {
+      background: var(--cream);
+      border: 1px solid rgba(184,144,58,0.25);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 2px;
+      background: var(--gold);
+    }
+    .contact-card:hover {
+      box-shadow: 0 8px 32px rgba(26,46,31,0.08);
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+    .contact-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .contact-type {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .contact-value {
+      font-size: 1.15rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      word-break: break-all;
+    }
+    .contact-value a {
+      color: var(--deep-green);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-value a:hover { color: var(--gold); }
+    .contact-note {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* LOCATION SECTION */
+    .location-section {
+      margin-top: 1rem;
+    }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0 2rem;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(184,144,58,0.3));
+    }
+    .section-divider::after {
+      background: linear-gradient(90deg, rgba(184,144,58,0.3), transparent);
+    }
+    .section-divider-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .location-card {
+      background: var(--cream);
+      border: 1px solid rgba(184,144,58,0.25);
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .location-info h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--deep-green);
+      margin-bottom: 1rem;
+    }
+
+    .location-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
+    }
+    .location-detail-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--deep-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      color: var(--gold-light);
+    }
+    .location-detail-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-mid);
+      padding-top: 0.2rem;
+    }
+    .location-detail-text strong {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dark);
+      margin-bottom: 0.1rem;
+      font-weight: 600;
+    }
+
+    .map-placeholder {
+      background: var(--deep-green);
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder:hover { background: var(--mid-green); }
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(184,144,58,0.05) 20px, rgba(184,144,58,0.05) 21px),
+        repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(184,144,58,0.05) 20px, rgba(184,144,58,0.05) 21px);
+    }
+    .map-pin { font-size: 2.5rem; position: relative; z-index: 1; }
+    .map-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+    .map-sublabel {
+      font-size: 0.85rem;
+      color: var(--gold-pale);
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NOTICE BOX */
+    .notice-box {
+      margin-top: 2rem;
+      padding: 1.5rem 2rem;
+      background: rgba(26,46,31,0.05);
+      border-left: 3px solid var(--gold);
+    }
+    .notice-box p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+      font-style: italic;
+      font-weight: 300;
+    }
+    .notice-box .arabic-inline {
+      font-family: 'Noto Naskh Arabic', serif;
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(184,144,58,0.3);
+    }
+    .footer-arabic {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      direction: rtl;
+      margin-bottom: 0.5rem;
+    }
+    .footer-text { font-size: 0.9rem; color: rgba(245,240,232,0.5); font-style: italic; }
+    .footer-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.1em;
+      margin: 1rem 0 0.3rem;
+    }
+
+    @media (max-width: 650px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .location-card { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Martella <span>Masjid</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#prayers">Prayer Times</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="section-label">Get in Touch</div>
+    <h1>Contact Us</h1>
+    <div class="arabic">تواصل معنا</div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- CONTACT CARDS -->
+    <div class="contact-grid">
+      <div class="contact-card">
+        <span class="contact-icon">📞</span>
+        <div class="contact-type">Phone</div>
+        <div class="contact-value">
+          <a href="tel:+14161234567">(416) 123-4567</a>
+        </div>
+        <p class="contact-note">Available during prayer times</p>
+      </div>
+      <div class="contact-card">
+        <span class="contact-icon">✉️</span>
+        <div class="contact-type">Email</div>
+        <div class="contact-value">
+          <a href="mailto:info@martellamasjid.com">info@martellamasjid.com</a>
+        </div>
+        <p class="contact-note">We'll respond within 24–48 hours</p>
+      </div>
+    </div>
+
+    <!-- NOTICE -->
+    <div class="notice-box">
+      <p>
+        <span class="arabic-inline">بسم الله —</span>
+        Martella Masjid is a small, resident-run community mosque. For general inquiries, prayer time questions, or Ramadan arrangements, please reach out via phone or email. We welcome all sincere inquiries, insha'Allah.
+      </p>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="section-divider">
+      <span class="section-divider-label">Find Us</span>
+    </div>
+
+    <div class="location-card">
+      <div class="location-info">
+        <h3>Martella Masjid</h3>
+        <div class="location-detail">
+          <div class="location-detail-icon">📍</div>
+          <div class="location-detail-text">
+            <strong>Address</strong>
+            1915 Martin Grove Road<br>Etobicoke, Toronto, ON
+          </div>
+        </div>
+        <div class="location-detail">
+          <div class="location-detail-icon">🏠</div>
+          <div class="location-detail-text">
+            <strong>Location</strong>
+            Located within the residential building. Please be respectful of residents when visiting.
+          </div>
+        </div>
+        <div class="location-detail">
+          <div class="location-detail-icon">🚌</div>
+          <div class="location-detail-text">
+            <strong>Transit</strong>
+            TTC accessible via Martin Grove Road corridor
+          </div>
+        </div>
+      </div>
+
+      <a class="map-placeholder" href="https://maps.google.com/?q=1915+Martin+Grove+Road+Etobicoke+Toronto" target="_blank">
+        <div class="map-pin">📍</div>
+        <div class="map-label">Open in Google Maps</div>
+        <div class="map-sublabel">1915 Martin Grove Rd</div>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-arabic">الحمد لله</div>
+    <p class="footer-text">All praise is due to God</p>
+    <div class="footer-name">Martella Masjid · Etobicoke, Toronto</div>
+    <p class="footer-text">1915 Martin Grove Road</p>
+  </footer>
+
+</body>
+</html>

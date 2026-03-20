@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events & Announcements — Martella Masjid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf7f2;
+      --gold: #b8903a;
+      --gold-light: #d4a853;
+      --gold-pale: #e8d5a3;
+      --deep-green: #1a2e1f;
+      --mid-green: #2d4a35;
+      --soft-green: #3d6147;
+      --text-dark: #1c1c1c;
+      --text-mid: #4a4a4a;
+      --text-light: #7a7a7a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,144,58,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--deep-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--text-mid);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.25s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* PAGE HEADER */
+    .page-header {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+    }
+    .page-header .section-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .page-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+    .page-header .arabic {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      direction: rtl;
+      margin-top: 0.5rem;
+    }
+
+    /* MAIN CONTENT */
+    .main {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      border: 1px dashed rgba(184,144,58,0.3);
+      background: var(--cream);
+    }
+    .empty-state .arabic-large {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      direction: rtl;
+      margin-bottom: 1rem;
+    }
+    .empty-state p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* EVENT CARDS */
+    .events-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .event-card {
+      border: 1px solid rgba(184,144,58,0.25);
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .event-card:hover {
+      box-shadow: 0 8px 32px rgba(26,46,31,0.08);
+      border-color: var(--gold);
+    }
+    .event-date-block {
+      background: var(--deep-green);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 0.5rem;
+      text-align: center;
+    }
+    .event-day {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .event-month {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-top: 0.3rem;
+    }
+    .event-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.5);
+      margin-top: 0.2rem;
+    }
+    .event-body { padding: 1.5rem 2rem; }
+    .event-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(184,144,58,0.4);
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.6rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .event-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--deep-green);
+      margin-bottom: 0.5rem;
+    }
+    .event-desc {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+      font-weight: 300;
+    }
+    .event-time {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* ANNOUNCEMENT CARDS */
+    .announcement-card {
+      border-left: 3px solid var(--gold);
+      background: var(--cream);
+      padding: 1.5rem 2rem;
+      transition: all 0.3s;
+    }
+    .announcement-card:hover {
+      box-shadow: 0 8px 32px rgba(26,46,31,0.08);
+    }
+    .announcement-date {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--text-light);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .announcement-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--deep-green);
+      margin-bottom: 0.5rem;
+    }
+    .announcement-body {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+      font-weight: 300;
+    }
+
+    /* SECTION DIVIDER */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0 2rem;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(184,144,58,0.3));
+    }
+    .section-divider::after {
+      background: linear-gradient(90deg, rgba(184,144,58,0.3), transparent);
+    }
+    .section-divider-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ADMIN PANEL */
+    #adminPanel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      overflow-y: auto;
+    }
+    .admin-box {
+      max-width: 600px;
+      margin: 3rem auto;
+      background: #faf7f2;
+      padding: 2.5rem;
+      position: relative;
+      border-top: 4px solid #b8903a;
+    }
+    .admin-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: #1a2e1f;
+      margin-bottom: 0.3rem;
+    }
+    .admin-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      color: #7a7a7a;
+      font-style: italic;
+      margin-bottom: 1.8rem;
+    }
+    .admin-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none; border: none;
+      font-size: 1.5rem; cursor: pointer;
+      color: #7a7a7a;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(184,144,58,0.3);
+    }
+    .admin-tab {
+      padding: 0.6rem 1.2rem;
+      background: none;
+      border: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      color: #7a7a7a;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+    .admin-tab.active {
+      color: #1a2e1f;
+      border-bottom-color: #b8903a;
+    }
+    .admin-form-group { margin-bottom: 1rem; }
+    .admin-label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: #1a2e1f;
+      margin-bottom: 0.4rem;
+    }
+    .admin-input {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      border: 1px solid #d4a853;
+      background: #f5f0e8;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: #1c1c1c;
+      outline: none;
+    }
+    .admin-input:focus { border-color: #b8903a; }
+    textarea.admin-input { resize: vertical; min-height: 80px; }
+    .admin-row { display: flex; gap: 0.8rem; }
+    .admin-row .admin-form-group { flex: 1; }
+    .admin-btn-row {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-save {
+      flex: 1;
+      padding: 0.85rem;
+      background: #1a2e1f;
+      color: #f5f0e8;
+      border: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .btn-outline {
+      flex: 1;
+      padding: 0.85rem;
+      background: transparent;
+      color: #b8903a;
+      border: 1px solid #b8903a;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .admin-msg {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      text-align: center;
+    }
+    .existing-list { display: flex; flex-direction: column; gap: 0.8rem; }
+    .existing-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      background: #f5f0e8;
+      border: 1px solid rgba(184,144,58,0.2);
+    }
+    .existing-item-text { flex: 1; }
+    .existing-item-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      color: #1a2e1f;
+    }
+    .existing-item-meta {
+      font-size: 0.8rem;
+      color: #7a7a7a;
+      font-style: italic;
+      margin-top: 0.2rem;
+    }
+    .btn-delete {
+      background: none;
+      border: 1px solid #c0392b;
+      color: #c0392b;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      flex-shrink: 0;
+    }
+
+    /* LOGIN */
+    #loginModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(184,144,58,0.3);
+    }
+    .footer-arabic {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      direction: rtl;
+      margin-bottom: 0.5rem;
+    }
+    .footer-text { font-size: 0.9rem; color: rgba(245,240,232,0.5); font-style: italic; }
+    .footer-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.1em;
+      margin: 1rem 0 0.3rem;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .event-card { grid-template-columns: 70px 1fr; }
+      .event-body { padding: 1rem; }
+      .admin-row { flex-direction: column; gap: 0; }
+    }
+    @media (max-width: 420px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Martella <span>Masjid</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#prayers">Prayer Times</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="section-label">Stay Informed</div>
+    <h1>Events & Announcements</h1>
+    <div class="arabic">الأحداث والإعلانات</div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- UPCOMING EVENTS -->
+    <div class="section-divider">
+      <span class="section-divider-label">Upcoming Events</span>
+    </div>
+    <div id="eventsList"></div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="section-divider">
+      <span class="section-divider-label">Announcements</span>
+    </div>
+    <div id="announcementsList"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-arabic">الحمد لله</div>
+    <p class="footer-text">All praise is due to God</p>
+    <div class="footer-name" id="footerName">Martella Masjid · Etobicoke, Toronto</div>
+    <p class="footer-text">1915 Martin Grove Road</p>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" style="display:none; position:fixed; inset:0; z-index:998; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); justify-content:center; align-items:center;">
+    <div style="background:#faf7f2; padding:2.5rem; max-width:360px; width:90%; border-top:4px solid #b8903a; position:relative;">
+      <button onclick="closeLogin()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#7a7a7a;">✕</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:#1a2e1f;margin-bottom:0.3rem;">Admin Login</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:#7a7a7a;font-style:italic;margin-bottom:1.5rem;">Martella Masjid Management</div>
+      <input id="adminPassInput" type="password" placeholder="Enter password"
+        style="width:100%;padding:0.7rem 1rem;border:1px solid #d4a853;background:#f5f0e8;font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:1rem;outline:none;">
+      <button onclick="attemptLogin()" style="width:100%;padding:0.85rem;background:#1a2e1f;color:#f5f0e8;border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;text-transform:uppercase;">Login</button>
+      <div id="loginErr" style="margin-top:0.8rem;font-size:0.9rem;color:#c0392b;font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel">
+    <div class="admin-box">
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+      <div class="admin-title">Admin Panel</div>
+      <div class="admin-sub">Manage events and announcements</div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('addEvent')">Add Event</button>
+        <button class="admin-tab" onclick="switchTab('addAnnouncement')">Add Announcement</button>
+        <button class="admin-tab" onclick="switchTab('manage')">Manage</button>
+      </div>
+
+      <!-- ADD EVENT -->
+      <div id="tab-addEvent">
+        <div class="admin-form-group">
+          <label class="admin-label">Event Title</label>
+          <input type="text" id="evTitle" class="admin-input" placeholder="e.g. Ramadan Iftar Gathering">
+        </div>
+        <div class="admin-row">
+          <div class="admin-form-group">
+            <label class="admin-label">Date</label>
+            <input type="date" id="evDate" class="admin-input">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Time (optional)</label>
+            <input type="time" id="evTime" class="admin-input">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Category</label>
+          <select id="evTag" class="admin-input">
+            <option value="General">General</option>
+            <option value="Ramadan">Ramadan</option>
+            <option value="Prayer">Prayer</option>
+            <option value="Community">Community</option>
+            <option value="Notice">Notice</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Description</label>
+          <textarea id="evDesc" class="admin-input" placeholder="Brief description of the event..."></textarea>
+        </div>
+        <div class="admin-btn-row">
+          <button class="btn-save" onclick="addEvent()">Add Event</button>
+        </div>
+        <div class="admin-msg" id="evMsg"></div>
+      </div>
+
+      <!-- ADD ANNOUNCEMENT -->
+      <div id="tab-addAnnouncement" style="display:none;">
+        <div class="admin-form-group">
+          <label class="admin-label">Announcement Title</label>
+          <input type="text" id="anTitle" class="admin-input" placeholder="e.g. Change in Asr Prayer Time">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Message</label>
+          <textarea id="anBody" class="admin-input" placeholder="Write your announcement here..." style="min-height:120px;"></textarea>
+        </div>
+        <div class="admin-btn-row">
+          <button class="btn-save" onclick="addAnnouncement()">Post Announcement</button>
+        </div>
+        <div class="admin-msg" id="anMsg"></div>
+      </div>
+
+      <!-- MANAGE -->
+      <div id="tab-manage" style="display:none;">
+        <div style="font-family:'Cinzel',serif;font-size:0.8rem;color:#1a2e1f;margin-bottom:0.8rem;letter-spacing:0.08em;">EVENTS</div>
+        <div id="manageEvents" class="existing-list"></div>
+        <div style="font-family:'Cinzel',serif;font-size:0.8rem;color:#1a2e1f;margin:1.5rem 0 0.8rem;letter-spacing:0.08em;">ANNOUNCEMENTS</div>
+        <div id="manageAnnouncements" class="existing-list"></div>
+        <div class="admin-btn-row" style="margin-top:2rem;">
+          <button class="btn-outline" onclick="clearAll()">Clear All Content</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASS_KEY  = 'mm_admin_pass';
+    const EVENTS_KEY      = 'mm_events';
+    const ANNOUNCE_KEY    = 'mm_announcements';
+    const DEFAULT_PASS    = 'masjid2024';
+
+    function getPass() { return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS; }
+    function getEvents() { try { return JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch { return []; } }
+    function getAnnouncements() { try { return JSON.parse(localStorage.getItem(ANNOUNCE_KEY)) || []; } catch { return []; } }
+
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function formatTime(t) {
+      if (!t) return '';
+      const [h, m] = t.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${ampm}`;
+    }
+
+    function renderEvents() {
+      const events = getEvents().sort((a,b) => new Date(a.date) - new Date(b.date));
+      const now = new Date(); now.setHours(0,0,0,0);
+      const upcoming = events.filter(e => new Date(e.date) >= now);
+      const el = document.getElementById('eventsList');
+      if (upcoming.length === 0) {
+        el.innerHTML = `<div class="empty-state"><div class="arabic-large">قريباً</div><p>No upcoming events at this time.<br>Check back soon, insha'Allah.</p></div>`;
+        return;
+      }
+      el.innerHTML = `<div class="events-list">${upcoming.map(e => {
+        const d = new Date(e.date + 'T12:00:00');
+        return `<div class="event-card">
+          <div class="event-date-block">
+            <div class="event-day">${String(d.getDate()).padStart(2,'0')}</div>
+            <div class="event-month">${MONTHS[d.getMonth()]}</div>
+            <div class="event-year">${d.getFullYear()}</div>
+          </div>
+          <div class="event-body">
+            <span class="event-tag">${e.tag}</span>
+            <div class="event-title">${e.title}</div>
+            ${e.desc ? `<p class="event-desc">${e.desc}</p>` : ''}
+            ${e.time ? `<p class="event-time">🕐 ${formatTime(e.time)}</p>` : ''}
+          </div>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
+    function renderAnnouncements() {
+      const announcements = getAnnouncements().reverse();
+      const el = document.getElementById('announcementsList');
+      if (announcements.length === 0) {
+        el.innerHTML = `<div class="empty-state"><div class="arabic-large">إن شاء الله</div><p>No announcements at this time.</p></div>`;
+        return;
+      }
+      el.innerHTML = `<div class="events-list">${announcements.map(a => `
+        <div class="announcement-card">
+          <div class="announcement-date">${new Date(a.createdAt).toLocaleDateString('en-CA', {year:'numeric',month:'long',day:'numeric'})}</div>
+          <div class="announcement-title">${a.title}</div>
+          <p class="announcement-body">${a.body}</p>
+        </div>`).join('')}</div>`;
+    }
+
+    // ── ADMIN ──
+    function openLogin() {
+      document.getElementById('loginModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+    }
+    function closeLogin() {
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('loginErr').textContent = '';
+      document.getElementById('adminPassInput').value = '';
+    }
+    function attemptLogin() {
+      if (document.getElementById('adminPassInput').value === getPass()) {
+        closeLogin(); openAdmin();
+      } else {
+        document.getElementById('loginErr').textContent = 'Incorrect password.';
+      }
+    }
+    document.getElementById('adminPassInput').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
+
+    function openAdmin() {
+      renderManage();
+      document.getElementById('adminPanel').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAdmin() {
+      document.getElementById('adminPanel').style.display = 'none';
+      document.body.style.overflow = '';
+      renderEvents();
+      renderAnnouncements();
+    }
+
+    function switchTab(tab) {
+      ['addEvent','addAnnouncement','manage'].forEach(t => {
+        document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+      });
+      document.querySelectorAll('.admin-tab').forEach((btn, i) => {
+        btn.classList.toggle('active', ['addEvent','addAnnouncement','manage'][i] === tab);
+      });
+      if (tab === 'manage') renderManage();
+    }
+
+    function addEvent() {
+      const title = document.getElementById('evTitle').value.trim();
+      const date  = document.getElementById('evDate').value;
+      const time  = document.getElementById('evTime').value;
+      const tag   = document.getElementById('evTag').value;
+      const desc  = document.getElementById('evDesc').value.trim();
+      if (!title || !date) { showMsg('evMsg', 'Please enter a title and date.', 'red'); return; }
+      const events = getEvents();
+      events.push({ id: Date.now(), title, date, time, tag, desc });
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+      document.getElementById('evTitle').value = '';
+      document.getElementById('evDate').value = '';
+      document.getElementById('evTime').value = '';
+      document.getElementById('evDesc').value = '';
+      showMsg('evMsg', '✓ Event added successfully!', 'green');
+    }
+
+    function addAnnouncement() {
+      const title = document.getElementById('anTitle').value.trim();
+      const body  = document.getElementById('anBody').value.trim();
+      if (!title || !body) { showMsg('anMsg', 'Please fill in all fields.', 'red'); return; }
+      const list = getAnnouncements();
+      list.push({ id: Date.now(), title, body, createdAt: new Date().toISOString() });
+      localStorage.setItem(ANNOUNCE_KEY, JSON.stringify(list));
+      document.getElementById('anTitle').value = '';
+      document.getElementById('anBody').value = '';
+      showMsg('anMsg', '✓ Announcement posted!', 'green');
+    }
+
+    function renderManage() {
+      const events = getEvents().sort((a,b) => new Date(a.date)-new Date(b.date));
+      const me = document.getElementById('manageEvents');
+      me.innerHTML = events.length ? events.map(e => `
+        <div class="existing-item">
+          <div class="existing-item-text">
+            <div class="existing-item-title">${e.title}</div>
+            <div class="existing-item-meta">${e.date}${e.time ? ' · '+formatTime(e.time) : ''} · ${e.tag}</div>
+          </div>
+          <button class="btn-delete" onclick="deleteEvent(${e.id})">Delete</button>
+        </div>`).join('') : '<p style="font-size:0.9rem;color:#7a7a7a;font-style:italic;">No events yet.</p>';
+
+      const announcements = getAnnouncements().reverse();
+      const ma = document.getElementById('manageAnnouncements');
+      ma.innerHTML = announcements.length ? announcements.map(a => `
+        <div class="existing-item">
+          <div class="existing-item-text">
+            <div class="existing-item-title">${a.title}</div>
+            <div class="existing-item-meta">${new Date(a.createdAt).toLocaleDateString()}</div>
+          </div>
+          <button class="btn-delete" onclick="deleteAnnouncement(${a.id})">Delete</button>
+        </div>`).join('') : '<p style="font-size:0.9rem;color:#7a7a7a;font-style:italic;">No announcements yet.</p>';
+    }
+
+    function deleteEvent(id) {
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(getEvents().filter(e => e.id !== id)));
+      renderManage();
+    }
+    function deleteAnnouncement(id) {
+      localStorage.setItem(ANNOUNCE_KEY, JSON.stringify(getAnnouncements().filter(a => a.id !== id)));
+      renderManage();
+    }
+    function clearAll() {
+      if (confirm('Clear all events and announcements?')) {
+        localStorage.removeItem(EVENTS_KEY);
+        localStorage.removeItem(ANNOUNCE_KEY);
+        renderManage();
+      }
+    }
+
+    function showMsg(id, text, color) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.style.color = color === 'green' ? '#3d6147' : '#c0392b';
+      setTimeout(() => el.textContent = '', 3000);
+    }
+
+    // Triple-click footer to open admin
+    let clickCount = 0, clickTimer;
+    document.getElementById('footerName').addEventListener('click', () => {
+      clickCount++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+      if (clickCount >= 3) { clickCount = 0; openLogin(); }
+    });
+
+    renderEvents();
+    renderAnnouncements();
+  </script>
+</body>
+</html>
