@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Martella Masjid — Etobicoke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf7f2;
+      --gold: #b8903a;
+      --gold-light: #d4a853;
+      --gold-pale: #e8d5a3;
+      --deep-green: #1a2e1f;
+      --mid-green: #2d4a35;
+      --soft-green: #3d6147;
+      --text-dark: #1c1c1c;
+      --text-mid: #4a4a4a;
+      --text-light: #7a7a7a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── GEOMETRIC BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(184,144,58,0.03) 40px, rgba(184,144,58,0.03) 41px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(250, 247, 242, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,144,58,0.2);
+    }
+
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--deep-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.25s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-ornament {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,144,58,0.12);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-ring 6s ease-in-out infinite;
+    }
+
+    .hero-ornament:nth-child(2) {
+      width: 450px; height: 450px;
+      border-color: rgba(184,144,58,0.18);
+      animation-delay: 1s;
+    }
+
+    .hero-ornament:nth-child(3) {
+      width: 300px; height: 300px;
+      border-color: rgba(184,144,58,0.25);
+      animation-delay: 2s;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.7; }
+    }
+
+    .arabic-title {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      direction: rtl;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.3s;
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 600;
+      color: var(--deep-green);
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.5s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15em;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--text-mid);
+      margin-top: 1.2rem;
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.7s;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2rem auto;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.9s;
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-mid);
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.1s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.3s;
+    }
+
+    .btn-primary {
+      padding: 0.85rem 2.2rem;
+      background: var(--deep-green);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      border: 1px solid var(--deep-green);
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--deep-green);
+    }
+
+    .btn-secondary {
+      padding: 0.85rem 2.2rem;
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .btn-secondary:hover {
+      background: var(--gold);
+      color: var(--warm-white);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PRAYER TIMES ── */
+    .section-prayers {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title.dark { color: var(--deep-green); }
+
+    .prayers-date {
+      font-size: 1rem;
+      color: var(--gold-pale);
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    .prayers-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 900px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .prayer-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(184,144,58,0.3);
+      padding: 1.5rem 2rem;
+      min-width: 140px;
+      flex: 1;
+      max-width: 160px;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prayer-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .prayer-card:hover::before { transform: scaleX(1); }
+    .prayer-card:hover { background: rgba(184,144,58,0.1); }
+
+    .prayer-card.active {
+      background: rgba(184,144,58,0.15);
+      border-color: var(--gold);
+    }
+
+    .prayer-card.active::before { transform: scaleX(1); }
+
+    .prayer-name {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1rem;
+      color: var(--gold-pale);
+      direction: rtl;
+      margin-bottom: 0.3rem;
+    }
+
+    .prayer-name-en {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .prayer-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .prayer-loading {
+      color: var(--gold-pale);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .prayers-note {
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.5);
+      font-style: italic;
+      margin-top: 1rem;
+    }
+
+    /* ── ABOUT ── */
+    .section-about {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-ornament {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .about-hex {
+      width: 320px;
+      height: 320px;
+      position: relative;
+    }
+
+    .about-hex svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.15;
+    }
+
+    .about-center-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .about-arabic-large {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      direction: rtl;
+      line-height: 1.2;
+    }
+
+    .about-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--soft-green);
+      margin-top: 0.5rem;
+    }
+
+    .about-text .section-label { color: var(--gold); }
+
+    .about-text p {
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: var(--text-mid);
+      font-weight: 300;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-details {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .about-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: var(--text-mid);
+    }
+
+    .detail-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--deep-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      color: var(--gold-light);
+    }
+
+    /* ── SERVICES ── */
+    .section-services {
+      position: relative;
+      z-index: 1;
+      background: var(--cream);
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+
+    .service-card {
+      background: var(--warm-white);
+      border: 1px solid rgba(184,144,58,0.2);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26,46,31,0.08);
+      border-color: var(--gold);
+    }
+
+    .service-icon {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+      direction: rtl;
+    }
+
+    .service-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--deep-green);
+      margin-bottom: 0.8rem;
+    }
+
+    .service-desc {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      font-weight: 300;
+    }
+
+    /* ── LOCATION ── */
+    .section-location {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .location-card {
+      margin-top: 3rem;
+      border: 1px solid rgba(184,144,58,0.25);
+      padding: 3rem;
+      background: var(--cream);
+      position: relative;
+    }
+
+    .location-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 60px; height: 2px;
+      background: var(--gold);
+    }
+
+    .location-address {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: var(--text-mid);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .location-note {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      font-weight: 300;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: var(--deep-green);
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(184,144,58,0.3);
+    }
+
+    .footer-arabic {
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      direction: rtl;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-text {
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.5);
+      font-style: italic;
+    }
+
+    .footer-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.1em;
+      margin: 1rem 0 0.3rem;
+    }
+
+    /* ── RAMADAN BANNER ── */
+    .ramadan-banner {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, var(--gold) 0%, #a07030 100%);
+      padding: 1rem 2rem;
+      text-align: center;
+      display: none;
+    }
+
+    .ramadan-banner.visible { display: block; }
+
+    .ramadan-banner p {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--warm-white);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .nav-links a { font-size: 0.9rem; }
+      .section-about {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 4rem 1.5rem;
+      }
+      .about-ornament { display: none; }
+      .prayer-card { min-width: 120px; padding: 1.2rem 1rem; }
+      .location-card { padding: 2rem 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links { display: none; }
+      .prayers-grid { gap: 0.7rem; }
+      .prayer-card { max-width: 130px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Martella <span>Masjid</span></a>
+    <ul class="nav-links">
+      <li><a href="#prayers">Prayer Times</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#location">Location</a></li>
+    </ul>
+  </nav>
+
+  <!-- RAMADAN BANNER (shown programmatically during Ramadan) -->
+  <div class="ramadan-banner" id="ramadanBanner">
+    <p>🌙 &nbsp; Ramadan Mubarak — Daily Taraweeh prayers offered every night &nbsp; 🌙</p>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-ornament"></div>
+    <div class="hero-ornament"></div>
+    <div class="hero-ornament"></div>
+    <div class="arabic-title">مسجد مارتيلا</div>
+    <h1>Martella <em>Masjid</em></h1>
+    <p class="hero-subtitle">A Place of Prayer & Peace — Etobicoke, Toronto</p>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      A community mosque nestled within the heart of 1915 Martin Grove Road, serving the residents of our building and welcoming all who seek a place of worship and reflection.
+    </p>
+    <div class="hero-cta">
+      <a href="#prayers" class="btn-primary">Today's Prayers</a>
+      <a href="#location" class="btn-secondary">Find Us</a>
+    </div>
+  </section>
+
+  <!-- PRAYER TIMES -->
+  <section class="section-prayers" id="prayers">
+    <div class="section-label">Daily Schedule</div>
+    <h2 class="section-title">Prayer Times</h2>
+    <p class="prayers-date" id="prayersDate">Loading today's date...</p>
+
+    <div class="prayers-grid" id="prayersGrid">
+      <p class="prayer-loading">Fetching prayer times for Etobicoke...</p>
+    </div>
+    <p class="prayers-note">* Jumu'ah (Friday Prayer) is not offered at this location</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" style="position:relative;z-index:1;">
+    <div class="section-about">
+      <div class="about-ornament">
+        <div class="about-hex">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="none" stroke="#b8903a" stroke-width="1"/>
+            <polygon points="100,30 172,67.5 172,132.5 100,170 28,132.5 28,67.5" fill="none" stroke="#b8903a" stroke-width="0.5"/>
+            <polygon points="100,50 155,80 155,120 100,150 45,120 45,80" fill="none" stroke="#b8903a" stroke-width="0.5"/>
+            <line x1="100" y1="10" x2="100" y2="190" stroke="#b8903a" stroke-width="0.3"/>
+            <line x1="10" y1="55" x2="190" y2="145" stroke="#b8903a" stroke-width="0.3"/>
+            <line x1="190" y1="55" x2="10" y2="145" stroke="#b8903a" stroke-width="0.3"/>
+          </svg>
+          <div class="about-center-text">
+            <div class="about-arabic-large">بسم الله</div>
+            <div class="about-tagline">In the Name of God</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title dark" style="margin-bottom:1.5rem;">A Masjid<br>Born from Community</h2>
+        <p>
+          Martella Masjid is a small, resident-run mosque located within the residential building at 1915 Martin Grove Road in Etobicoke. Founded by the Muslim residents of the building, it is a space of intimacy, devotion, and brotherhood.
+        </p>
+        <p>
+          We offer all five daily prayers in congregation, and during the blessed month of Ramadan, we hold nightly Taraweeh prayers for our community.
+        </p>
+        <div class="about-details">
+          <div class="about-detail">
+            <div class="detail-icon">🕌</div>
+            <span>Five daily prayers in congregation</span>
+          </div>
+          <div class="about-detail">
+            <div class="detail-icon">🌙</div>
+            <span>Daily Taraweeh during Ramadan</span>
+          </div>
+          <div class="about-detail">
+            <div class="detail-icon">🏠</div>
+            <span>Resident-run community mosque</span>
+          </div>
+          <div class="about-detail">
+            <div class="detail-icon">📍</div>
+            <span>1915 Martin Grove Rd, Etobicoke</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section-services" id="services">
+    <div class="section-label">What We Offer</div>
+    <h2 class="section-title dark">Our Services</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">الفجر</span>
+        <div class="service-title">Five Daily Prayers</div>
+        <p class="service-desc">All five obligatory prayers — Fajr, Dhuhr, Asr, Maghrib, and Isha — are held in congregation daily.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">رمضان</span>
+        <div class="service-title">Taraweeh Prayers</div>
+        <p class="service-desc">During the holy month of Ramadan, nightly Taraweeh prayers are offered for the community.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">دعاء</span>
+        <div class="service-title">Community Space</div>
+        <p class="service-desc">A quiet, welcoming space for dhikr, personal prayer, and spiritual reflection for building residents.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <section class="section-location" id="location">
+    <div class="section-label">Find Us</div>
+    <h2 class="section-title dark">Visit the Masjid</h2>
+    <div class="location-card">
+      <p class="location-address">
+        1915 Martin Grove Road<br>
+        Etobicoke, Toronto, ON
+      </p>
+      <p class="location-note">
+        Martella Masjid is located within the residential building. Please be respectful of residents when visiting. The masjid is primarily intended for building residents and their guests.
+      </p>
+      <a href="https://maps.google.com/?q=1915+Martin+Grove+Road+Etobicoke+Toronto" target="_blank" class="btn-primary">Open in Google Maps</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-arabic">الحمد لله</div>
+    <p class="footer-text">All praise is due to God</p>
+    <div class="footer-name">Martella Masjid · Etobicoke, Toronto</div>
+    <p class="footer-text" style="margin-top:0.3rem;">1915 Martin Grove Road</p>
+  </footer>
+
+  <script>
+    // ── PRAYER TIMES via Aladhan API ──
+    const PRAYERS = [
+      { key: 'Fajr',    arabic: 'الفجر',   en: 'Fajr'    },
+      { key: 'Dhuhr',   arabic: 'الظهر',   en: 'Dhuhr'   },
+      { key: 'Asr',     arabic: 'العصر',   en: 'Asr'     },
+      { key: 'Maghrib', arabic: 'المغرب',  en: 'Maghrib' },
+      { key: 'Isha',    arabic: 'العشاء',  en: 'Isha'    },
+    ];
+
+    function to12h(time24) {
+      const [h, m] = time24.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+    }
+
+    function getCurrentPrayer(timings) {
+      const now = new Date();
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const times = PRAYERS.map(p => {
+        const [h, m] = timings[p.key].split(':').map(Number);
+        return h * 60 + m;
+      });
+      let current = 4;
+      for (let i = 0; i < times.length; i++) {
+        if (nowMins >= times[i]) current = i;
+      }
+      return current;
+    }
+
+    async function loadPrayerTimes() {
+      const grid = document.getElementById('prayersGrid');
+      const dateEl = document.getElementById('prayersDate');
+      try {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2,'0');
+        const mm = String(today.getMonth()+1).padStart(2,'0');
+        const yyyy = today.getFullYear();
+        const res = await fetch(
+          `https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?city=Etobicoke&country=Canada&method=2`
+        );
+        const data = await res.json();
+        const timings = data.data.timings;
+        const hijri = data.data.date.hijri;
+        const gregorian = data.data.date.gregorian;
+
+        dateEl.textContent = `${gregorian.weekday.en}, ${gregorian.date} · ${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
+
+        const activePrayer = getCurrentPrayer(timings);
+        grid.innerHTML = PRAYERS.map((p, i) => `
+          <div class="prayer-card ${i === activePrayer ? 'active' : ''}">
+            <div class="prayer-name">${p.arabic}</div>
+            <div class="prayer-name-en">${p.en}</div>
+            <div class="prayer-time">${to12h(timings[p.key])}</div>
+          </div>
+        `).join('');
+
+        // Check Ramadan
+        if (hijri.month.number === 9) {
+          document.getElementById('ramadanBanner').classList.add('visible');
+        }
+
+      } catch(e) {
+        grid.innerHTML = `<p class="prayer-loading">Unable to load prayer times. Please check back later.</p>`;
+        dateEl.textContent = new Date().toDateString();
+      }
+    }
+
+    loadPrayerTimes();
+  </script>
+</body>
+</html>
